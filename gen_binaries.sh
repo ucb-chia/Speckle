@@ -169,6 +169,12 @@ if [ "$compileFlag" = true ]; then
    # Copy the master runscript into the overlay directory
    cp ${build_dir}/../spec17-run-scripts/${suite_type}.sh ${overlay_dir}/${suite_type}/${input_type}
 
+   # Copy the TMA counter reader if it exists
+   if [ -f ${build_dir}/../tma_reader ]; then
+      cp ${build_dir}/../tma_reader ${overlay_dir}/${suite_type}/${input_type}/tma_reader
+      chmod +x ${overlay_dir}/${suite_type}/${input_type}/tma_reader
+   fi
+
 fi
 
 # Produces the .cmd files for a benchmark suite
