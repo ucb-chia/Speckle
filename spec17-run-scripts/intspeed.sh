@@ -96,3 +96,5 @@ fi
 if [ -z "$DISABLE_COUNTERS" -a "$counters" -ne 0 ]; then
     stop_counters
 fi
+
+echo "Spec run finished"

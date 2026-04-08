@@ -74,3 +74,5 @@ while pgrep -f run.sh > /dev/null; do sleep 10; done
 if [ -z "$DISABLE_COUNTERS" -a "$counters" -ne 0 ]; then
     stop_counters
 fi
+
+echo "Spec run finished"
