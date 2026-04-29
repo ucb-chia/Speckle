@@ -1,5 +1,5 @@
--I./lib diffmail.pl 2 550 15 24 23 100 > diffmail.2.550.15.24.23.100.out 2>> diffmail.2.550.15.24.23.100.err
--I./lib perfect.pl b 3 > perfect.b.3.out 2>> perfect.b.3.err
--I./lib splitmail.pl 535 13 25 24 1091 > splitmail.535.13.25.24.1091.out 2>> splitmail.535.13.25.24.1091.err
--I. -I./lib scrabbl.pl < scrabbl.in > scrabbl.out 2>> scrabbl.err
--I. -I./lib suns.pl > suns.out 2>> suns.err
+-I./lib diffmail.pl 2 550 15 24 23 100
+-I./lib perfect.pl b 3
+-I. -I./lib scrabbl.pl < scrabbl.in
+-I./lib splitmail.pl 535 13 25 24 1091
+-I. -I./lib suns.pl

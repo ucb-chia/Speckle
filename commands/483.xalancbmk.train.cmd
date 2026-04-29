@@ -1,1 +1,1 @@
--v allbooks.xml xalanc.xsl > train.out 2>> train.err
+-v allbooks.xml xalanc.xsl

@@ -15,6 +15,26 @@
    
    All of the following sections of the README may be out of date.
 
+
+** Dual-version support: SPEC CPU2006 + CPU2017 **
+
+   How wrappers invoke the right script:
+
+       spec2017 wrapper Makefile -> cd speckle && ./gen_binaries.sh \
+                                       --compile --suite <intspeed|intrate|fpspeed|fprate> \
+                                       --input <test|train|ref>
+       spec2006 wrapper Makefile -> cd speckle && ./gen_binaries-cpu2006.sh \
+                                       --compile --suite <cint2006|cfp2006> \
+                                       --input <test|train|ref>
+
+   Differences in build mechanics:
+       - SPEC2017 uses `runcpu`; benchmarks live under benchspec/CPU/...
+         per-bench run dir is run_base_<size><class>_<label>-m64.0000
+         (with class infix and -m64).
+       - SPEC2006 uses `runspec`; benchmarks live under benchspec/CPU2006/...
+         per-bench run dir is run_base_<size>_<label>.0000
+         (no class infix, no -m64).
+
 **Purpose**
 
    The goal of this repository is to help you compile and run SPEC. This will
