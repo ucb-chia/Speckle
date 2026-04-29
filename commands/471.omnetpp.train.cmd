@@ -1,0 +1,1 @@
+omnetpp.ini > omnetpp.log 2>> omnetpp.err

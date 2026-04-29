@@ -1,0 +1,1 @@
+< h2ocu2+.energy.config > h2ocu2+.energy.out 2>> h2ocu2+.energy.err
