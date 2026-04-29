@@ -1,0 +1,8 @@
+--quiet --mode gtp < arb.tst > arb.out 2>> arb.err
+--quiet --mode gtp < arend.tst > arend.out 2>> arend.err
+--quiet --mode gtp < arion.tst > arion.out 2>> arion.err
+--quiet --mode gtp < atari_atari.tst > atari_atari.out 2>> atari_atari.err
+--quiet --mode gtp < blunder.tst > blunder.out 2>> blunder.err
+--quiet --mode gtp < buzco.tst > buzco.out 2>> buzco.err
+--quiet --mode gtp < nicklas2.tst > nicklas2.out 2>> nicklas2.err
+--quiet --mode gtp < nicklas4.tst > nicklas4.out 2>> nicklas4.err
