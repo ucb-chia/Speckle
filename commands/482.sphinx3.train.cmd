@@ -1,1 +1,1 @@
-ctlfile . args.an4 > an4.log 2>> an4.err
+ctlfile . args.an4

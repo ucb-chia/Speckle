@@ -1,1 +1,1 @@
--silent -deffnm gromacs -nice 0 > gromacs.log 2>> gromacs.err
+-silent -deffnm gromacs -nice 0

@@ -1,2 +1,2 @@
-BigLakes1024.cfg > BigLakes1024.out 2>> BigLakes1024.err
-rivers1.cfg > rivers1.out 2>> rivers1.err
+BigLakes1024.cfg
+rivers1.cfg

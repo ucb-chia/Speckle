@@ -1,1 +1,1 @@
--i  stairs > stairs.log 2>> stairs.err
+-i stairs
