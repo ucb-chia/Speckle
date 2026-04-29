@@ -139,8 +139,12 @@ if [ "$compileFlag" = true ]; then
         # SPEC06 run-dir layout has no class/-m64; only <size>_<label>.0000
         host_bmk_dir="${bmark_base_dir}/run/run_base_${input_type}_${H_CONFIG}.0000"
 
-        # Copy non-executable files + directories (== the input data)
-        inputs=$(find "${host_bmk_dir}"/* -maxdepth 0 ! -executable -o -type d)
+        # Copy all input files + directories EXCEPT the SPEC-built host
+        # binary (which has the *_base.<H_CONFIG>* suffix). Filtering on
+        # `! -executable` is wrong: some SPEC inputs (e.g. perlbench train's
+        # .pl scripts) ship with execute bits set and would be silently
+        # dropped, leaving the on-target run.sh referencing missing files.
+        inputs=$(find "${host_bmk_dir}"/* -maxdepth 0 ! -name "*_base.${H_CONFIG}*")
         for input in ${inputs}; do
             cp -rf "${input}" -T "${output_dir}/$(basename "${input}")"
         done
