@@ -115,19 +115,44 @@ echo ""
 mkdir -p "${build_dir}"
 
 if [ "$compileFlag" = true ]; then
-    echo "Compiling SPEC CPU2006..."
-    cp "${script_dir}/${CONFIGFILE}"   "${SPEC_DIR}/config/${CONFIGFILE}"
-    cp "${script_dir}/${H_CONFIGFILE}" "${SPEC_DIR}/config/${H_CONFIGFILE}"
+    # riscv-cpu2006.cfg references %{ENV_TMA_INJECT_OBJ} in EXTRA_LIBS, so
+    # runspec must see TMA_INJECT_OBJ in its environment. The Makefile
+    # passes it in; export it explicitly so shell sourcing of $SPEC_DIR/shrc
+    # doesn't drop it on the floor. SPEC2006 has no speed/rate split, so
+    # every suite needs the injection (unlike spec17 where intrate is
+    # excluded).
+    if [ -z "$TMA_INJECT_OBJ" ]; then
+        echo "ERROR: TMA_INJECT_OBJ env var not set (build via 'make spec06-${suite_type}')" >&2
+        exit 1
+    fi
+    if [ ! -f "$TMA_INJECT_OBJ" ]; then
+        echo "ERROR: TMA_INJECT_OBJ=$TMA_INJECT_OBJ does not exist" >&2
+        exit 1
+    fi
+    export TMA_INJECT_OBJ
 
+    echo "Compiling SPEC CPU2006..."
+    # SPEC2006's runspec lacks the %{ENV_FOO} build-time substitution that
+    # runcpu has in SPEC2017 (CPU2006 only supports preENV_*/ENV_* runtime
+    # injection). The cfg ships with `EXTRA_LIBS = %{ENV_TMA_INJECT_OBJ}`
+    # as a template placeholder; resolve it ourselves with sed before
+    # handing the cfg to runspec, so SPEC's link line gets the real path.
+    sed "s|%{ENV_TMA_INJECT_OBJ}|${TMA_INJECT_OBJ}|g" "${script_dir}/${CONFIGFILE}"   > "${SPEC_DIR}/config/${CONFIGFILE}"
+    sed "s|%{ENV_TMA_INJECT_OBJ}|${TMA_INJECT_OBJ}|g" "${script_dir}/${H_CONFIGFILE}" > "${SPEC_DIR}/config/${H_CONFIGFILE}"
+
+    # `runspec --config NAME` resolves NAME against $SPEC_DIR/config/NAME.cfg.
+    # We pass the basename of CONFIGFILE (riscv-cpu2006), not CONFIG (riscv),
+    # because $SPEC_DIR/config/riscv.cfg is the SPEC2017 cfg co-installed by
+    # the spec17 build path. Same for H_CONFIG/H_CONFIGFILE.
     echo "Building target binaries with config: ${CONFIGFILE}"
     ( cd "${SPEC_DIR}" && . ./shrc && \
-      time runspec --verbose 10 --config ${CONFIG} --size ${input_type} \
+      time runspec --verbose 10 --config "${CONFIGFILE%.cfg}" --size ${input_type} \
                    --action build ${runspec_suite} \
         > "${build_dir}/${CONFIG}-${suite_type}-build.log" )
 
     echo "Compiling host binaries + materializing inputs with config: ${H_CONFIGFILE}"
     ( cd "${SPEC_DIR}" && . ./shrc && \
-      time runspec --verbose 10 --config ${H_CONFIG} --size ${input_type} \
+      time runspec --verbose 10 --config "${H_CONFIGFILE%.cfg}" --size ${input_type} \
                    --action runsetup ${runspec_suite} \
         > "${build_dir}/${H_CONFIG}-${suite_type}-build.log" )
 
@@ -216,7 +241,7 @@ fi
 if [ "$genCommandsFlag" = true ]; then
     log_file="${build_dir}/${suite_type}.${input_type}.fakerun.log"
     ( cd "${SPEC_DIR}" && . ./shrc && \
-      time runspec --config=${H_CONFIG} --fake --verbose 9 --size ${input_type} \
+      time runspec --config="${H_CONFIGFILE%.cfg}" --fake --verbose 9 --size ${input_type} \
                    --action=onlyrun ${runspec_suite} > "${log_file}" )
 
     bmarks=($(grep -nE "Running 4[0-9][0-9]" "${log_file}" | grep -Eo '[0-9]+\.[0-9a-zA-Z_]+'))
