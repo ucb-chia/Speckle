@@ -1,0 +1,5 @@
+-I./lib diffmail.pl 2 550 15 24 23 100
+-I./lib perfect.pl b 3
+-I. -I./lib scrabbl.pl < scrabbl.in
+-I./lib splitmail.pl 535 13 25 24 1091
+-I. -I./lib suns.pl

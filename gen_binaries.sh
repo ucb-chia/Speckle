@@ -79,6 +79,22 @@ echo "  compile: " $compileFlag
 echo "  genCmd : " $genCommandsFlag
 echo ""
 
+# riscv.cfg references %{ENV_TMA_INJECT_OBJ} for intspeed/fpspeed builds, so
+# runcpu must see TMA_INJECT_OBJ in its environment. The Makefile passes it
+# in; export it explicitly so shell sourcing of $SPEC_DIR/shrc doesn't drop
+# it on the floor.
+if [[ ${suite_type} == *"speed"* ]]; then
+   if [ -z "$TMA_INJECT_OBJ" ]; then
+      echo "ERROR: TMA_INJECT_OBJ env var not set (build via 'make spec17-${suite_type}')" >&2
+      exit 1
+   fi
+   if [ ! -f "$TMA_INJECT_OBJ" ]; then
+      echo "ERROR: TMA_INJECT_OBJ=$TMA_INJECT_OBJ does not exist" >&2
+      exit 1
+   fi
+   export TMA_INJECT_OBJ
+fi
+
 
 # Directory into which speckle will dump logs and the overlay
 build_dir=$PWD/build
@@ -166,7 +182,9 @@ if [ "$compileFlag" = true ]; then
       done
       chmod +x $run_script
    done
-   # Copy the master runscript into the overlay directory
+   # Copy the master runscript into the overlay directory.
+   # No tma_reader to copy — counters are dumped via the ctor/dtor in
+   # tma_inject.o that riscv.cfg's EXTRA_LIBS linked into each speed binary.
    cp ${build_dir}/../spec17-run-scripts/${suite_type}.sh ${overlay_dir}/${suite_type}/${input_type}
 
 fi

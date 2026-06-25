@@ -1,0 +1,8 @@
+--quiet --mode gtp < arb.tst
+--quiet --mode gtp < arend.tst
+--quiet --mode gtp < arion.tst
+--quiet --mode gtp < atari_atari.tst
+--quiet --mode gtp < blunder.tst
+--quiet --mode gtp < buzco.tst
+--quiet --mode gtp < nicklas2.tst
+--quiet --mode gtp < nicklas4.tst

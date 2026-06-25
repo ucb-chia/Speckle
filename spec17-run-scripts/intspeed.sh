@@ -77,6 +77,13 @@ else
     full_name=${bmark_name}_${workload_num}
 fi
 
+# TMA counters are inlined: tma_inject.o (linked in by riscv.cfg's EXTRA_LIBS)
+# provides a constructor that snapshots before main() and a destructor that
+# writes TMA_CTL_DUMP at exit, firing the BoomPerfCounterDevice synthesized
+# printf. The counter block lands on the simulator console (Verilator stderr
+# / FireSim printf bridge log), not in ~/output. handle-results.py parses it
+# from there.
+
 # busybox has a bug in time where escape characters (e.g. \n) are not
 # interpreted correctly, we have to put the CSV header in manually
 echo "name,RealTime,UserTime,KernelTime" >> ~/output/${full_name}.csv
@@ -86,3 +93,5 @@ echo "name,RealTime,UserTime,KernelTime" >> ~/output/${full_name}.csv
 if [ -z "$DISABLE_COUNTERS" -a "$counters" -ne 0 ]; then
     stop_counters
 fi
+
+echo "Spec run finished"

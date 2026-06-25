@@ -1,0 +1,2 @@
+-s1 -e -m5000 pds-20.mps
+-m1200 train.mps
